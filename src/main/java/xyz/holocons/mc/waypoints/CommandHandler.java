@@ -34,6 +34,7 @@ public class CommandHandler implements TabExecutor {
                         showTeleportMenu(player);
                         return true;
                     }
+
                     final var subcommand = args[0].toUpperCase();
                     switch (subcommand) {
                         case "ADDPOINT", "CREATE", "REMOVEPOINT", "SETCAMP", "SETHOME" -> {
@@ -58,6 +59,7 @@ public class CommandHandler implements TabExecutor {
                     if (args.length == 0) {
                         return false;
                     }
+
                     final var subcommand = args[0].toUpperCase();
                     switch (subcommand) {
                         case "ACTIVATE", "DELETE" -> {
@@ -92,12 +94,14 @@ public class CommandHandler implements TabExecutor {
                                 final var traveler = travelerManager.getOrCreateTraveler(player);
                                 final var waypoints = waypointManager.getNamedWaypoints().filter(traveler::hasWaypoint);
                                 var names = waypoints.map(Waypoint::getName);
+
                                 if (traveler.getCamp() != null) {
                                     names = Stream.concat(names, Stream.of("camp"));
                                 }
                                 if (traveler.getHome() != null) {
                                     names = Stream.concat(names, Stream.of("home"));
                                 }
+
                                 yield names.toList();
                             } else {
                                 yield List.of();
@@ -134,11 +138,13 @@ public class CommandHandler implements TabExecutor {
         Location location;
         if (destination.equalsIgnoreCase("home")) {
             location = traveler.getHome();
+
             if (location == null) {
                 player.sendMessage(Component.text("You don't have a home!"));
             }
         } else if (destination.equalsIgnoreCase("camp")) {
             location = traveler.getCamp();
+
             if (location == null) {
                 player.sendMessage(Component.text("You don't have a camp!"));
             }
@@ -151,6 +157,7 @@ public class CommandHandler implements TabExecutor {
             showTeleportMenu(player);
             return;
         }
+
         new TeleportTask(plugin, player, location);
     }
 }

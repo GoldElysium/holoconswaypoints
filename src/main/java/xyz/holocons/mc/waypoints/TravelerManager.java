@@ -78,10 +78,12 @@ public class TravelerManager {
 
     public Traveler getOrCreateTraveler(UUID uniqueId) {
         var traveler = travelers.get(uniqueId);
+
         if (traveler == null) {
             traveler = new Traveler(1, 1, null, null, null);
             travelers.put(uniqueId, traveler);
         }
+
         return traveler;
     }
 
@@ -91,9 +93,11 @@ public class TravelerManager {
 
     public <T extends BukkitRunnable> T getTask(Player player, Class<T> taskCls) {
         final var task = tasks.get(player.getUniqueId());
+
         if (task == null || task.isCancelled()) {
             return null;
         }
+
         try {
             return taskCls.cast(task);
         } catch (ClassCastException e) {
@@ -103,6 +107,7 @@ public class TravelerManager {
 
     public void registerTask(Player player, BukkitRunnable task) {
         final var previousTask = tasks.put(player.getUniqueId(), task);
+
         if (previousTask != null) {
             previousTask.cancel();
         }
@@ -110,6 +115,7 @@ public class TravelerManager {
 
     public void unregisterTask(Player player) {
         final var task = tasks.remove(player.getUniqueId());
+
         if (task != null) {
             task.cancel();
         }

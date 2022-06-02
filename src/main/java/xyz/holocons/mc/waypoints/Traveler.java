@@ -52,6 +52,7 @@ public class Traveler {
         if (waypoint == null) {
             return;
         }
+
         waypoints.set(waypoint.getId());
     }
 
@@ -59,6 +60,7 @@ public class Traveler {
         if (waypoint == null) {
             return;
         }
+
         waypoints.clear(waypoint.getId());
     }
 
@@ -89,7 +91,9 @@ public class Traveler {
                 @Override
                 public void run() {
                     final var newCharges = Math.min(maxCharges, traveler.getCharges() + 1);
+
                     traveler.setCharges(newCharges);
+
                     if (newCharges == maxCharges) {
                         cancel();
                     }

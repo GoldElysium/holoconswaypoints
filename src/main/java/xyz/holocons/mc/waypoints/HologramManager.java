@@ -41,15 +41,19 @@ public class HologramManager {
     public void show(Waypoint waypoint, Collection<? extends Player> players) {
         final var fakeEntity = new FakeEntity();
         final var spawnPacket = Hologram.getSpawnPacket(fakeEntity.entityId, fakeEntity.uniqueId, waypoint);
+
         players.forEach(player -> {
             sendPacket(spawnPacket, player);
+
             final var hologram = new Hologram(waypoint, player);
             final var entityId = holograms.put(hologram, fakeEntity.entityId);
+
             if (entityId != null) {
                 final var destroyPacket = Hologram.getDestroyPacket(entityId);
                 sendPacket(destroyPacket, player);
             }
         });
+
         update(waypoint, players);
     }
 
@@ -60,6 +64,7 @@ public class HologramManager {
     public void update(Waypoint waypoint, Player player) {
         final var hologram = new Hologram(waypoint, player);
         final var entityId = holograms.get(hologram);
+
         if (entityId != null) {
             final var packet = Hologram.getMetadataPacket(entityId, waypoint);
             sendPacket(packet, player);
@@ -77,6 +82,7 @@ public class HologramManager {
     public void hide(Waypoint waypoint, Player player) {
         final var hologram = new Hologram(waypoint, player);
         final var entityId = holograms.remove(hologram);
+
         if (entityId != null) {
             final var packet = Hologram.getDestroyPacket(entityId);
             sendPacket(packet, player);
@@ -110,7 +116,9 @@ public class HologramManager {
 
     private static Collection<Player> getTrackedPlayers(Player player) {
         final var players = player.getTrackedPlayers();
+
         players.add(player);
+
         return players;
     }
 }

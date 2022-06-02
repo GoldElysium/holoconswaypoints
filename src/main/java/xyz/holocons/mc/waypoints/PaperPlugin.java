@@ -20,6 +20,7 @@ public final class PaperPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         saveDefaultConfig();
+
         config = getConfig();
         gson = new Gson();
         hologramManager = new HologramManager();
@@ -37,10 +38,14 @@ public final class PaperPlugin extends JavaPlugin {
             waypointManager.clearWaypoints();
             throw new UncheckedIOException(e);
         }
+
         final var commandHandler = new CommandHandler(this);
+
         getCommand("waypoints").setExecutor(commandHandler);
         getCommand("editwaypoints").setExecutor(commandHandler);
+
         final var eventListener = new EventListener(this);
+
         getServer().getPluginManager().registerEvents(eventListener, this);
     }
 

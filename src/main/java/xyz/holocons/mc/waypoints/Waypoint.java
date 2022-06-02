@@ -25,10 +25,13 @@ public class Waypoint {
     private static final Component INACTIVE_WAYPOINT_COMPONENT;
     private static final Component UNNAMED_WAYPOINT_COMPONENT;
     private static final ItemStack MISSING_BANNER_ITEMSTACK;
+
     static {
         INACTIVE_WAYPOINT_COMPONENT = Component.text("Inactive Waypoint");
         UNNAMED_WAYPOINT_COMPONENT = Component.text("Unnamed Waypoint");
+
         MISSING_BANNER_ITEMSTACK = new ItemStack(Material.WHITE_BANNER);
+
         var bannerMeta = (BannerMeta) MISSING_BANNER_ITEMSTACK.getItemMeta();
         bannerMeta.addPattern(new Pattern(DyeColor.BLACK, PatternType.STRIPE_TOP));
         bannerMeta.addPattern(new Pattern(DyeColor.WHITE, PatternType.RHOMBUS_MIDDLE));
@@ -38,8 +41,10 @@ public class Waypoint {
         bannerMeta.addPattern(new Pattern(DyeColor.WHITE, PatternType.STRIPE_MIDDLE));
         bannerMeta.addPattern(new Pattern(DyeColor.WHITE, PatternType.STRIPE_BOTTOM));
         bannerMeta.addPattern(new Pattern(DyeColor.WHITE, PatternType.BORDER));
+
         bannerMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_POTION_EFFECTS);
         bannerMeta.displayName(UNNAMED_WAYPOINT_COMPONENT);
+
         MISSING_BANNER_ITEMSTACK.setItemMeta(bannerMeta);
     }
 
@@ -99,7 +104,9 @@ public class Waypoint {
     private static ItemStack getDisplayItem(Location location) {
         var itemStack = getBannerItem(location);
         var itemMeta = itemStack.getItemMeta();
+
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_POTION_EFFECTS);
+
         var vectorComponent = Component.text()
             .color(NamedTextColor.GRAY)
             .append(Component.text(location.getBlockX()))
@@ -108,28 +115,35 @@ public class Waypoint {
             .append(Component.space())
             .append(Component.text(location.getBlockZ()))
             .build();
+
         var worldComponent = Component.text(location.getWorld().getName(), NamedTextColor.GRAY);
+
         itemMeta.lore(List.of(vectorComponent, worldComponent));
         itemStack.setItemMeta(itemMeta);
+
         return itemStack;
     }
 
     public ItemStack getDisplayItem() {
         var itemStack = Waypoint.getDisplayItem(location);
+
         if (!active) {
             var itemMeta = itemStack.getItemMeta();
             itemMeta.displayName(INACTIVE_WAYPOINT_COMPONENT);
             itemStack.setItemMeta(itemMeta);
         }
+
         return itemStack;
     }
 
     private static Component getDisplayName(Location location) {
         var itemStack = getBannerItem(location);
         var itemMeta = itemStack.getItemMeta();
+
         if (itemMeta.hasDisplayName()) {
             return itemMeta.displayName();
         }
+
         return UNNAMED_WAYPOINT_COMPONENT;
     }
 
@@ -137,6 +151,7 @@ public class Waypoint {
         if (!active) {
             return INACTIVE_WAYPOINT_COMPONENT;
         }
+
         return Waypoint.getDisplayName(location);
     }
 

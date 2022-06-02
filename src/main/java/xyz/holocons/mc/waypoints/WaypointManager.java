@@ -12,7 +12,6 @@ import org.bukkit.block.Block;
 public class WaypointManager {
 
     public static final String FILENAME = "waypoint.json";
-
     private final HashMap<Long, Waypoint> waypoints;
 
     public WaypointManager() {
@@ -77,9 +76,11 @@ public class WaypointManager {
         if (getNearbyWaypoint(location) != null) {
             return null;
         }
+
         var waypoint = new Waypoint(getAvailableId(), location, null, false);
         var chunkKey = waypoint.getChunkKey();
         waypoints.put(chunkKey, waypoint);
+
         return waypoint;
     }
 
@@ -97,6 +98,7 @@ public class WaypointManager {
 
     public boolean isWaypoint(Location location) {
         var waypoint = getNearbyWaypoint(location);
+
         return waypoint != null && waypoint.getLocation().equals(location);
     }
 
