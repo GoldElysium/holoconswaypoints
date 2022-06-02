@@ -43,17 +43,21 @@ public class HologramManager {
         final var spawnPacket = Hologram.getSpawnPacket(fakeEntity.entityId, fakeEntity.uniqueId, waypoint);
 
         players.forEach(player -> {
+            // Send the fake entity to player
             sendPacket(spawnPacket, player);
 
+            // Create a hologram for the player and set the id
             final var hologram = new Hologram(waypoint, player);
             final var entityId = holograms.put(hologram, fakeEntity.entityId);
 
+            // Check if there was previously a hologram with that entity id, if so delete
             if (entityId != null) {
                 final var destroyPacket = Hologram.getDestroyPacket(entityId);
                 sendPacket(destroyPacket, player);
             }
         });
 
+        // Update the hologram metadata for players
         update(waypoint, players);
     }
 
@@ -62,7 +66,9 @@ public class HologramManager {
     }
 
     public void update(Waypoint waypoint, Player player) {
+        // Get the hologram for that player for that specific waypoint
         final var hologram = new Hologram(waypoint, player);
+        // Get the entity id of the hologram
         final var entityId = holograms.get(hologram);
 
         if (entityId != null) {
@@ -80,9 +86,12 @@ public class HologramManager {
     }
 
     public void hide(Waypoint waypoint, Player player) {
+        // Get the hologram for that player for that specific waypoint
         final var hologram = new Hologram(waypoint, player);
+        // Try to remove that hologram
         final var entityId = holograms.remove(hologram);
 
+        // If it existed, send destroy entity packet to the client
         if (entityId != null) {
             final var packet = Hologram.getDestroyPacket(entityId);
             sendPacket(packet, player);
