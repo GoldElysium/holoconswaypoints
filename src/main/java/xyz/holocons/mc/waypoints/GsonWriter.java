@@ -28,14 +28,19 @@ public class GsonWriter extends JsonWriter {
         }
 
         beginObject();
+
         name("id");
         value(value.getId());
+
         name("location");
         value(value.getLocation());
+
         name("contributors");
         value(value.getContributors());
+
         name("active");
         value(value.isActive());
+
         endObject();
     }
 
@@ -46,16 +51,22 @@ public class GsonWriter extends JsonWriter {
         }
 
         beginObject();
+
         name("charges");
         value(value.getCharges());
+
         name("tokens");
         value(value.getTokens());
+
         name("home");
         value(value.getHome());
+
         name("camp");
         value(value.getCamp());
+
         name("waypoints");
         value(value.getWaypoints());
+
         endObject();
     }
 
@@ -69,6 +80,7 @@ public class GsonWriter extends JsonWriter {
         var x = Double.toString(value.getX());
         var y = Double.toString(value.getY());
         var z = Double.toString(value.getZ());
+
         value(world + ',' + x + ',' + y + ',' + z);
     }
 

@@ -30,9 +30,10 @@ public class GsonReader extends JsonReader {
         }
 
         int id = -1;
+        boolean active = false;
+
         Location location = null;
         ArrayList<UUID> contributors = null;
-        boolean active = false;
 
         beginObject();
         while (hasNext()) {
@@ -57,6 +58,7 @@ public class GsonReader extends JsonReader {
 
         int charges = 1;
         int tokens = 1;
+
         Location home = null;
         Location camp = null;
         BitSet waypoints = null;
@@ -109,6 +111,7 @@ public class GsonReader extends JsonReader {
 
         var hexString = nextString();
         byte[] bytes;
+
         try {
             bytes = HexFormat.of().parseHex(hexString);
         } catch (IllegalArgumentException e) {
