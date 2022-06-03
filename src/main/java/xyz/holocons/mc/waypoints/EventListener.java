@@ -29,6 +29,8 @@ public final class EventListener implements Listener {
 
     public EventListener(final PaperPlugin plugin) {
         this.plugin = plugin;
+
+        // Set managers
         this.hologramManager = plugin.getHologramManager();
         this.travelerManager = plugin.getTravelerManager();
         this.waypointManager = plugin.getWaypointManager();
@@ -36,16 +38,20 @@ public final class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
+        // Don't continue if block placed isn't a banner
         if (!Tag.ITEMS_BANNERS.isTagged(event.getItemInHand().getType())) {
             return;
         }
 
         final var blockPlaced = event.getBlockPlaced();
         final var player =  event.getPlayer();
+        // Check if the player has an open modify waypoint task
         final var task = travelerManager.getTask(player, ModifyWaypointTask.class);
 
         if (task == null) {
+            // Check if there's a waypoint in this chunk
             if (waypointManager.isWaypoint(blockPlaced)) {
+                // Add player to waypoint
                 final var waypoint = waypointManager.getNearbyWaypoint(blockPlaced);
                 hologramManager.updateTrackedPlayers(waypoint, player);
             }
@@ -59,6 +65,7 @@ public final class EventListener implements Listener {
 
         switch (task.getMode()) {
             case CREATE -> {
+                // Attempt to create waypoint
                 final var waypoint = waypointManager.createWaypoint(blockPlaced);
 
                 if (waypoint == null) {
@@ -72,6 +79,7 @@ public final class EventListener implements Listener {
                 return;
             }
         }
+
         travelerManager.unregisterTask(player);
     }
 
@@ -82,7 +90,7 @@ public final class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
-        // menu
+        // TODO: menu
     }
 
     @EventHandler
@@ -109,15 +117,18 @@ public final class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
     public void onPlayerInteract(PlayerInteractEvent event) {
+        // Check if hand is empty and is right-clicking on a block
         if (event.isBlockInHand() || event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) {
             return;
         }
 
         final var clickedBlock = event.getClickedBlock();
         final var player = event.getPlayer();
+        // Check if player has pending task
         final var task = travelerManager.getTask(player, ModifyWaypointTask.class);
 
         if (!waypointManager.isWaypoint(clickedBlock)) {
+            // Don't continue if there isn't a pending task or if the banner isn't tagged with the block
             if (task == null || !Tag.ITEMS_BANNERS.isTagged(clickedBlock.getType())) {
                 return;
             }
@@ -146,6 +157,7 @@ public final class EventListener implements Listener {
 
         if (task == null) {
             if (waypoint.isActive()) {
+                // Register waypoint
                 final var traveler = travelerManager.getOrCreateTraveler(player);
 
                 if (!traveler.hasWaypoint(waypoint)) {
@@ -153,6 +165,7 @@ public final class EventListener implements Listener {
                     player.sendMessage(Component.text("You registered a waypoint!", NamedTextColor.GOLD));
                 }
             } else {
+                // If waypoint is inactive, show the contributor/token requirement in an actionbar
                 final var tokenRequirement = plugin.getWaypointTokenRequirement();
                 final var contributors = waypoint.getContributorNames();
                 final var contributorNamesBuilder = Component.text()
@@ -187,8 +200,10 @@ public final class EventListener implements Listener {
 
                 if (tokens > 0) {
                     player.sendMessage(Component.text("You added a token!", NamedTextColor.BLUE));
+
                     traveler.setTokens(tokens - 1);
                     contributors.add(player.getUniqueId());
+
                     if (contributors.size() >= tokenRequirement) {
                         waypoint.activate();
                         hologramManager.updateTrackedPlayers(waypoint, player);
@@ -202,6 +217,8 @@ public final class EventListener implements Listener {
                     return;
                 }
 
+                // Remove waypoint
+
                 waypointManager.removeWaypoint(waypoint);
 
                 final var maxTokens = plugin.getTravelerMaxTokens();
@@ -214,6 +231,7 @@ public final class EventListener implements Listener {
                 hologramManager.remove(waypoint);
             }
             case DELETE -> {
+                // Force remove waypoint
                 waypointManager.removeWaypoint(waypoint);
                 travelerManager.removeWaypoint(waypoint);
 
@@ -236,8 +254,10 @@ public final class EventListener implements Listener {
 
                 if (contributors.contains(uniqueId)) {
                     player.sendMessage(Component.text("You removed a token!", NamedTextColor.BLUE));
+
                     final var maxTokens = plugin.getTravelerMaxTokens();
                     final var traveler = travelerManager.getOrCreateTraveler(player);
+
                     traveler.setTokens(Math.min(traveler.getTokens() + 1, maxTokens));
                     contributors.remove(uniqueId);
                 }

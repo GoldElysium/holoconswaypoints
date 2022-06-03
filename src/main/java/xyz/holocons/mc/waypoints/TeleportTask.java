@@ -32,10 +32,12 @@ public class TeleportTask extends BukkitRunnable {
         this.initialPosition = player.getLocation().toVector();
         this.key = new NamespacedKey(plugin, Integer.toString(taskId));
 
+        // Create boss bar with timer
         final var bossBar = Bukkit.createBossBar(key, "Teleporting...", BarColor.GREEN, BarStyle.SEGMENTED_20);
         bossBar.setProgress(0.0);
         bossBar.addPlayer(player);
 
+        // Start teleport timer
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> removeBossBar(key), teleportWaitTime + 2);
     }
 
@@ -57,6 +59,7 @@ public class TeleportTask extends BukkitRunnable {
         final var newProgress = Math.min(bossBar.getProgress() + 0.05, 1.0);
         bossBar.setProgress(newProgress);
 
+        // When progress reaches 100%, teleport player
         if (newProgress == 1.0) {
             cancel();
             traveler.setCharges(traveler.getCharges() - 1);
@@ -88,7 +91,7 @@ public class TeleportTask extends BukkitRunnable {
 
     private static Location toXZCenterLocation(final Location location) {
         final var newLocation = location.clone();
-        
+
         newLocation.setX(location.getBlockX() + 0.5);
         newLocation.setZ(location.getBlockZ() + 0.5);
 

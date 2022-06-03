@@ -28,10 +28,12 @@ public class TravelerManager {
             return;
         }
 
+        // Clear internal if internal data isn't empty
         if (!travelers.isEmpty()) {
             clearTravelers();
         }
 
+        // Load player data
         final var reader = new GsonReader(plugin.getGson(), file);
         reader.beginObject();
         while (reader.hasNext()) {
@@ -47,6 +49,7 @@ public class TravelerManager {
         reader.endObject();
         reader.close();
 
+        // Start regen timer for online players
         for (var player : Bukkit.getOnlinePlayers()) {
             getOrCreateTraveler(player).startRegenCharge(plugin);
         }
@@ -70,6 +73,7 @@ public class TravelerManager {
     }
 
     public void clearTravelers() {
+        // Stop regen timers and tasks, then clear
         travelers.values().forEach(Traveler::stopRegenCharge);
         travelers.clear();
         tasks.values().forEach(BukkitRunnable::cancel);

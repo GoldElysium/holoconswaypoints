@@ -93,11 +93,13 @@ public class Waypoint {
     }
 
     private static ItemStack getBannerItem(Location location) {
+        // Check block is a waypoint banner
         for (var itemStack : location.getBlock().getDrops()) {
             if (Tag.ITEMS_BANNERS.isTagged(itemStack.getType())) {
                 return itemStack;
             }
         }
+
         return MISSING_BANNER_ITEMSTACK.clone();
     }
 
@@ -107,6 +109,7 @@ public class Waypoint {
 
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_POTION_EFFECTS);
 
+        // Create item lore
         var vectorComponent = Component.text()
             .color(NamedTextColor.GRAY)
             .append(Component.text(location.getBlockX()))

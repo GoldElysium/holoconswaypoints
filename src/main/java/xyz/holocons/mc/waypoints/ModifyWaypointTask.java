@@ -36,6 +36,7 @@ public class ModifyWaypointTask extends BukkitRunnable {
         this.mode = mode;
         this.expiration = Bukkit.getCurrentTick() + 600;
 
+        // Send message to player with what mode they entered
         final var messageComponent = Component.text()
             .clickEvent(ClickEvent.runCommand("/waypoints cancel"))
             .hoverEvent(HoverEvent.showText(Component.text("Click to cancel early!")))

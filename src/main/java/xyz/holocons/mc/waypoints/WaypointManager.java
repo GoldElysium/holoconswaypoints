@@ -89,7 +89,10 @@ public class WaypointManager {
     }
 
     private int getAvailableId() {
-        return waypoints.values().stream().mapToInt(Waypoint::getId).max().orElse(-1) + 1;
+        return waypoints.values().stream()
+            .mapToInt(Waypoint::getId)
+            .max()
+            .orElse(-1) + 1;
     }
 
     public void removeWaypoint(Waypoint waypoint) {
@@ -107,7 +110,8 @@ public class WaypointManager {
     }
 
     public Stream<Waypoint> getActiveWaypoints() {
-        return waypoints.values().stream().filter(Waypoint::isActive);
+        return waypoints.values().stream()
+            .filter(Waypoint::isActive);
     }
 
     public Stream<Waypoint> getNamedWaypoints() {

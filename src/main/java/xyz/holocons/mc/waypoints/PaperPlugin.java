@@ -23,6 +23,8 @@ public final class PaperPlugin extends JavaPlugin {
 
         config = getConfig();
         gson = new Gson();
+
+        // Set managers
         hologramManager = new HologramManager();
         travelerManager = new TravelerManager();
         waypointManager = new WaypointManager();
@@ -30,6 +32,7 @@ public final class PaperPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Load data
         try {
             travelerManager.loadTravelers(this);
             waypointManager.loadWaypoints(this);
@@ -39,11 +42,13 @@ public final class PaperPlugin extends JavaPlugin {
             throw new UncheckedIOException(e);
         }
 
+        // Initialize command handler
         final var commandHandler = new CommandHandler(this);
 
         getCommand("waypoints").setExecutor(commandHandler);
         getCommand("editwaypoints").setExecutor(commandHandler);
 
+        // Initialize event listener
         final var eventListener = new EventListener(this);
 
         getServer().getPluginManager().registerEvents(eventListener, this);

@@ -75,7 +75,7 @@ public class CommandHandler implements TabExecutor {
                 }
             }
         } else {
-            // console command (givepoint, purge, reload)
+            // TODO: console command (givepoint, purge, reload)
         }
         return true;
     }
@@ -126,16 +126,17 @@ public class CommandHandler implements TabExecutor {
     }
 
     private void showEditMenu(Player player) {
-
+        // TODO
     }
 
     private void showTeleportMenu(Player player) {
-
+        // TODO
     }
 
     private void teleport(Player player, String destination) {
         final var traveler = travelerManager.getOrCreateTraveler(player);
         Location location;
+
         if (destination.equalsIgnoreCase("home")) {
             location = traveler.getHome();
 
@@ -150,9 +151,11 @@ public class CommandHandler implements TabExecutor {
             }
         } else {
             Predicate<Waypoint> matchesName = waypoint -> waypoint.getName().matches(destination);
+
             final var waypoint = waypointManager.getNamedWaypoints().filter(matchesName).findAny().orElse(null);
             location = traveler.hasWaypoint(waypoint) ? waypoint.getLocation() : null;
         }
+
         if (location == null) {
             showTeleportMenu(player);
             return;
